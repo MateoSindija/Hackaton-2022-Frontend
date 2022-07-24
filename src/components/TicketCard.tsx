@@ -23,14 +23,14 @@ interface IProps {
 
 const TicketCard = (props: IProps) => {
   const { description, imagePath, date, ticket_id, long, latt } = props;
-  const serverPath = "http://localhost:4000";
 
   return (
     <Card sx={{ maxWidth: 340, minWidth: 320, margin: 2 }}>
       <CardMedia
         component="img"
         alt="Sent from user"
-        height="140"
+        height="180px"
+        width="100%"
         image={imagePath}
       />
       <CardContent>

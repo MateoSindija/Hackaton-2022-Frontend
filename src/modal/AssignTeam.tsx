@@ -12,13 +12,14 @@ import {
 import React, { useState } from "react";
 import { Divider } from "@mui/material";
 import { useAssignTeamMutation } from "../redux/api";
+import { useAddEmployeeMutation, useEmployeesQuery } from "../redux/api";
 
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 300,
   bgcolor: "white",
   border: "2px solid #000",
   boxShadow: 24,
@@ -29,18 +30,12 @@ interface IProps {
   ticketID: string;
 }
 
-const teams = [
-  { teamName: "Tim 2", userID: "blablaad" },
-  { teamName: "Tim 3", userID: "blabla22" },
-  { teamName: "Tim 4", userID: "blabl23a" },
-  { teamName: "Tim 5", userID: "blablaasd" },
-];
-
 const AssignTeam = (props: IProps) => {
   const { ticketID } = props;
   const [modal, setModal] = useState(false);
   const [handleTeam, setTeam] = useState("");
   const [assign] = useAssignTeamMutation();
+  const { data: teams, isLoading } = useEmployeesQuery();
 
   const handleOpen = () => setModal(true);
   const handleClose = () => setModal(false);
@@ -57,7 +52,7 @@ const AssignTeam = (props: IProps) => {
       user_id: handleTeam,
     })
       .catch((error) => console.log(error))
-      .then((response) => console.log(response));
+      .then(() => handleClose());
   };
 
   return (
@@ -83,16 +78,17 @@ const AssignTeam = (props: IProps) => {
               name="radio-buttons-group"
               onChange={handleTeamChange}
             >
-              {teams.map((team) => {
-                return (
-                  <FormControlLabel
-                    key={team.userID}
-                    value={team.userID}
-                    control={<Radio />}
-                    label={team.teamName}
-                  />
-                );
-              })}
+              {!isLoading &&
+                teams.map((team: any) => {
+                  return (
+                    <FormControlLabel
+                      key={team.id}
+                      value={team.id}
+                      control={<Radio />}
+                      label={team.name}
+                    />
+                  );
+                })}
             </RadioGroup>
           </FormControl>
           <Button type="submit" variant="contained">

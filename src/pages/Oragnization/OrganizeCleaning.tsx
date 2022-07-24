@@ -1,4 +1,12 @@
-import { Grid, TextField, Container, Button, Typography } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Container,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import React, { useState } from "react";
 import Layout from "./Layout";
 import Box from "@mui/material/Box";
@@ -24,6 +32,8 @@ const OrganizeClening = () => {
 
   const [dateEnd, setDateEnd] = useState<Date | null>(new Date("2022-07-23"));
 
+  const [open, setOpen] = React.useState(false);
+
   const handleHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput({ ...input, header: event.target.value });
   };
@@ -44,6 +54,17 @@ const OrganizeClening = () => {
     setDateBegin(date);
   };
 
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const handleDateEnd = (date: Date | null) => {
     if (!dateBegin || !date) return;
     if (date < dateBegin) return;
@@ -59,17 +80,27 @@ const OrganizeClening = () => {
       header: input.header,
       location: input.location,
       description: input.desc,
-      dateBegin: dateBegin,
-      dateEnd: dateEnd,
-      payment: Number(input.payment),
+      start: dateBegin,
+      end: dateEnd,
+      payment: input.payment,
     })
-      .then((response: any) => console.log(response))
+      .then(() => setOpen(true))
       .catch((error: any) => console.log(error));
   };
 
   return (
     <Layout>
-      <Grid component="main" maxWidth="md" marginLeft={3}>
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Događaj uspješno organiziran!
+        </Alert>
+      </Snackbar>
+      <Grid component="main" maxWidth="md" marginLeft={1}>
         <Box mb={2}>
           <Typography variant="h4">Organizacija čišćenja</Typography>
         </Box>

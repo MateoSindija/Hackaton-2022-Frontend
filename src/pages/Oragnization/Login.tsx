@@ -10,25 +10,20 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ILogin, ILoginResult } from "../../models/auth.model";
 import { useAppDispatch } from "../../redux/store";
-import { login } from "../../redux/auth";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/api";
 
 const theme = createTheme();
 
 const SignIn = () => {
   const [input, setInput] = useState({ email: "", password: "" });
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [login] = useLoginMutation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const loginInfo: ILogin = { email: input.email, password: input.password };
-
-    await dispatch(login(loginInfo))
-      .unwrap()
-      .then(() => navigate("/organization-dashboard"))
-      .catch((error: any) => console.log(error));
+    navigate("/organization-dashboard");
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {

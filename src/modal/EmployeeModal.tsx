@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   FormControl,
   Grid,
@@ -7,6 +8,7 @@ import {
   Modal,
   Select,
   SelectChangeEvent,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -14,6 +16,7 @@ import React, { useState } from "react";
 import classes from "../scss/employees.module.scss";
 import AddIcon from "@mui/icons-material/Add";
 import { TextField } from "@mui/material";
+import { useAddEmployeeMutation } from "../redux/api";
 
 const style = {
   position: "absolute" as "absolute",
@@ -33,11 +36,34 @@ const EmployeeModal = () => {
   const [input, setInput] = useState({ name: "", username: "", password: "" });
   const handleOpen = () => setModal(true);
   const handleClose = () => setModal(false);
+  const [open, setOpen] = React.useState(false);
+  const [addEmployee] = useAddEmployeeMutation();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log(garbageType);
+    await addEmployee({
+      name: input.name,
+      email: input.username,
+      password: input.password,
+      type: garbageType,
+    })
+      .then(() => {
+        setOpen(true);
+        handleClose();
+      })
+      .catch((error: any) => console.log(error));
+  };
+
+  const handleCloseAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +84,20 @@ const EmployeeModal = () => {
 
   return (
     <>
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Tim uspješno dodan!
+        </Alert>
+      </Snackbar>
       <Button
         startIcon={<AddIcon />}
         variant="contained"

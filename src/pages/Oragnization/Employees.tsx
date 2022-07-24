@@ -19,61 +19,34 @@ import { ITeams } from "../../models/employee.model";
 import classes from "../../scss/employees.module.scss";
 import { IconButton } from "@mui/material";
 import EmployeeModal from "../../modal/EmployeeModal";
+import { useEmployeesQuery } from "../../redux/api";
 
 //paper, mixed, metal, glass,
 
-const rows: ITeams[] = [
-  {
-    name: "Tim TRSAT",
-    username: "username",
-    password: "password",
-    type: "paper",
-    id: " balsd",
-  },
-  {
-    name: "Tim 3",
-    username: "username sds  s ds s",
-    password: "password",
-    type: "mixed",
-    id: "asdsbalsd",
-  },
-  {
-    name: "Tim 2",
-    username: "username",
-    password: "password",
-    type: "metal",
-    id: "asdsbalsd",
-  },
-  {
-    name: "Tim 4",
-    username: "username",
-    password: "password",
-    type: "glass",
-    id: "asdsbalsd",
-  },
-];
+const empty = [{ name: "", password: "", type: "", username: "", id: "" }];
 
-const filterData = (query: string, data: ITeams[]) => {
+const filterData = (query: string, data: any) => {
   if (!query) {
     return data;
   } else {
     return data.filter(
-      (items: ITeams) =>
+      (items: any) =>
         items.name.toLowerCase().includes(query.toLowerCase()) ||
         items.type.toLowerCase().includes(query.toLowerCase()) ||
         items.password.toLowerCase().includes(query.toLowerCase()) ||
-        items.username.toLowerCase().includes(query.toLowerCase())
+        items.email.toLowerCase().includes(query.toLowerCase())
     );
   }
 };
 
 const Employees = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const dataFiltered = filterData(searchQuery, rows);
+  const { data: rows, isLoading, isError } = useEmployeesQuery();
+  const dataFiltered = isLoading ? empty : filterData(searchQuery, rows);
 
   return (
     <Layout>
-      <Grid marginLeft={3}>
+      <Grid marginLeft={1}>
         <div className={classes.container}>
           <Typography variant="h4">Radnici</Typography>
           <SearchBar
@@ -110,7 +83,7 @@ const Employees = () => {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.username}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
                     <TableCell align="left">{row.password}</TableCell>
                     <TableCell align="left">{row.type}</TableCell>
                   </TableRow>

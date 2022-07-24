@@ -41,7 +41,7 @@ const Dashboard = (props: any) => {
             <ListItemIcon>
               <CleaningServicesIcon />
             </ListItemIcon>
-            <ListItemText primary={"Čiščenje"} />
+            <ListItemText primary={"Čišćenje"} />
           </ListItemButton>
         </ListItem>
 
@@ -71,7 +71,7 @@ const Dashboard = (props: any) => {
           </ListItemButton>
         </ListItem>
 
-        <ListItem
+        {/* <ListItem
           disablePadding
           onClick={() => navigate("/organization-routes")}
         >
@@ -81,7 +81,7 @@ const Dashboard = (props: any) => {
             </ListItemIcon>
             <ListItemText primary={"Rute"} />
           </ListItemButton>
-        </ListItem>
+        </ListItem> */}
       </List>
     </div>
   );
@@ -152,7 +152,10 @@ const Dashboard = (props: any) => {
                   <ListItemIcon>
                     <LogoutIcon />
                   </ListItemIcon>
-                  <ListItemText primary={"Odjava"} />
+                  <ListItemText
+                    primary={"Odjava"}
+                    onClick={() => navigate("/login-organization")}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>

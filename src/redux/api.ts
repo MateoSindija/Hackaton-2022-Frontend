@@ -11,24 +11,10 @@ import { IEvent } from "../models/event.model";
 export const api = createApi({
   reducerPath: "hackatonApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "url servera",
-    prepareHeaders: (headers, { getState }) => {
-      headers.set("x-access-token", "jwtToken");
-
-      return headers;
-    },
+    baseUrl: "http://127.0.0.1:8000/api",
   }),
-
+  tagTypes: ["Ticket", "Employees"],
   endpoints: (builder) => ({
-    //register api
-    register: builder.mutation<IRegisterResult, IRegister>({
-      query: (registerData) => ({
-        url: `/register`,
-        method: "POST",
-        body: { ...registerData },
-      }),
-    }),
-
     //login api
     login: builder.mutation<ILoginResult, ILogin>({
       query: (loginData) => ({
@@ -38,20 +24,29 @@ export const api = createApi({
       }),
     }),
 
+    //get tickets
+    tickets: builder.query<any, void>({
+      query: () => ({
+        url: "/tickets",
+        method: "GET",
+      }),
+      providesTags: ["Ticket"],
+    }),
+
     //organize cleanin
-    organizeClean: builder.mutation<void, IEvent>({
+    organizeClean: builder.mutation<void, any>({
       query: (eventData) => ({
-        url: "/event",
+        url: "/events",
         method: "POST",
         body: { ...eventData },
       }),
     }),
 
     //set team
-    assignTeam: builder.mutation<void, IAssign>({
+    assignTeam: builder.mutation<void, any>({
       query: (assignData) => ({
         url: `/tickets/${assignData.ticketID}`,
-        method: "PATCH",
+        method: "PUT",
         body: { user_id: assignData.user_id },
       }),
     }),
@@ -63,11 +58,32 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+
+    //get employees
+    employees: builder.query<any, void>({
+      query: () => ({
+        url: "/users",
+        method: "GET",
+      }),
+      providesTags: ["Employees"],
+    }),
+
+    //new employee
+    addEmployee: builder.mutation<any, any>({
+      query: (employeeInfo) => ({
+        url: "/users",
+        method: "POST",
+        body: { ...employeeInfo },
+      }),
+      invalidatesTags: ["Employees"],
+    }),
   }),
 });
 
 export const {
-  useRegisterMutation,
+  useEmployeesQuery,
+  useAddEmployeeMutation,
+  useTicketsQuery,
   useLoginMutation,
   useOrganizeCleanMutation,
   useAssignTeamMutation,

@@ -3,53 +3,25 @@ import React from "react";
 import TicketCard from "../../components/TicketCard";
 import Layout from "../Oragnization/Layout";
 import Lizard from "../../assets/contemplative-reptile.jpg";
-
-const tickets = [
-  {
-    imagePath: "../../assets/contemplative-reptile.jpg",
-    created_by: "user",
-    description: "loremispus",
-    created_at: "23/07/2022",
-    ticketID: "qwerts",
-    user_id: "sdsdsd2323",
-    long: "45.3450049",
-    latt: "14.3921287",
-  },
-  {
-    imagePath: "dsd",
-    ticketID: "qwerts23",
-    created_by: "ide",
-    description: "slika",
-    created_at: "24/07/2022",
-    user_id: "s2ewq2",
-    long: "45.3450049",
-    latt: "14.3921287",
-  },
-  {
-    imagePath: "sdsds",
-    ticketID: "qwertsds1",
-    created_by: "korisnik",
-    description: "loremispus",
-    created_at: "23/07/2022",
-    user_id: "sdsdsd",
-    long: "45.3450049",
-    latt: "14.3921287",
-  },
-];
+import { useTicketsQuery } from "../../redux/api";
+import Trash from "../../assets/trash.jpg";
+import TrashNature from "../../assets/smece-rijeka.jpg";
 
 const Tickets = () => {
+  const { data: tickets } = useTicketsQuery();
+
   return (
     <Layout>
       <Grid container>
-        {tickets.map((ticket) => {
+        {tickets?.map((ticket: any, index: number) => {
           return (
             <TicketCard
               key={ticket.user_id}
-              ticket_id={ticket.ticketID}
+              ticket_id={ticket.id}
               user_id={ticket.user_id}
               description={ticket.description}
-              date={ticket.created_at}
-              imagePath={ticket.imagePath}
+              date={new Date(ticket.created_at).toLocaleDateString()}
+              imagePath={index == 1 ? Trash : TrashNature}
               long={ticket.long}
               latt={ticket.latt}
             />
