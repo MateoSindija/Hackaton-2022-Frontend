@@ -55,7 +55,7 @@ const Location = (props: IProps) => {
             loading="lazy"
             allowFullScreen
             referrerPolicy="no-referrer-when-downgrade"
-            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCljQKB2v0uadoYrrTnjMN_nacUM5HaMK4
+            src={`https://www.google.com/maps/embed/v1/place?key=REACT_APP_GOOGLE_KEY
     &q=${long},${latt}`}
           ></iframe>
         </Box>
